@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E0662F">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Sa Sa Ăn Gì</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
+<style>
+/* Layout: wheel-first single column on phones; wheel + menu editor side by side from 860px.
+   Ocean blues for the shark-cat popups, warm "quán cơm" segment colors for the wheel. */
+:root {
+  --bg: #F3F6F8;
+  --surface: #FFFFFF;
+  --ink: #1C2B36;
+  --muted: #5B6B77;
+  --line: #D7E0E7;
+  --accent: #E0662F;
+  --accent-ink: #FFFFFF;
+  --ocean-1: #DCEBF7;
+  --ocean-2: #B9D5EC;
+  --ocean-ink: #15324A;
+  --danger: #B42318;
+  --seg1: #D98A1E; --seg2: #2E7D6E; --seg3: #D2553A;
+  --seg4: #5E8A32; --seg5: #B4456A; --seg6: #3C6C9C;
+  --seg-ink: #FFFFFF;
+  --rim: #1C2B36;
+  --hub: #FFFFFF;
+  --font-display: "Baloo 2", "Be Vietnam Pro", system-ui, sans-serif;
+  --font-body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F171D; --surface: #17222A; --ink: #E8EEF2; --muted: #9AABB7; --line: #2A3944;
+    --accent: #F2834E; --accent-ink: #1A0D06;
+    --ocean-1: #173048; --ocean-2: #1F4463; --ocean-ink: #E4F0FA;
+    --danger: #F97066; --rim: #0A1116; --hub: #17222A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F171D; --surface: #17222A; --ink: #E8EEF2; --muted: #9AABB7; --line: #2A3944;
+  --accent: #F2834E; --accent-ink: #1A0D06;
+  --ocean-1: #173048; --ocean-2: #1F4463; --ocean-ink: #E4F0FA;
+  --danger: #F97066; --rim: #0A1116; --hub: #17222A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 120px;
+  -webkit-tap-highlight-color: transparent;
+}
+.page { max-width: 1040px; margin: 0 auto; display: grid; gap: 24px; }
+.masthead { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.masthead h1 {
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(28px, 7vw, 40px);
+  line-height: 1.05; margin: 0; text-wrap: balance;
+}
+.masthead h1 span { color: var(--accent); }
+.masthead p { margin: 4px 0 0; color: var(--muted); }
+
+.layout { display: grid; gap: 24px; }
+@media (min-width: 860px) { .layout { grid-template-columns: 1.1fr 0.9fr; align-items: start; } }
+
+/* Wheel */
+.stage { display: grid; justify-items: center; gap: 16px; }
+.wheel-wrap { position: relative; width: min(100%, 440px); aspect-ratio: 1; max-width: 100%; }
+.wheel-wrap canvas { width: 100%; height: 100%; display: block; cursor: pointer; touch-action: manipulation; }
+.pointer {
+  position: absolute; left: 50%; top: -6px; transform: translateX(-50%);
+  width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent;
+  border-top: 30px solid var(--accent); filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); pointer-events: none;
+}
+.spin-btn {
+  font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: .02em;
+  background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 999px;
+  padding: 12px 48px; cursor: pointer; box-shadow: 0 6px 0 color-mix(in srgb, var(--accent) 60%, #000);
+  transition: transform .08s ease, box-shadow .08s ease;
+}
+.spin-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 color-mix(in srgb, var(--accent) 60%, #000); }
+.spin-btn:disabled { opacity: .55; cursor: not-allowed; }
+.stage-note { color: var(--muted); font-size: 13px; margin: 0; text-align: center; }
+
+/* Editor */
+.editor { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.editor-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.editor-head h2 { font-family: var(--font-display); font-weight: 700; font-size: 22px; margin: 0; }
+.count { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: 14px; }
+.add-row { display: flex; gap: 8px; }
+.field {
+  flex: 1; min-width: 0; font: inherit; color: var(--ink); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
+}
+.field:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+.btn {
+  font: inherit; font-weight: 600; border-radius: 10px; padding: 10px 14px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+}
+.btn-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn-danger { color: var(--danger); }
+.btn:focus-visible, .spin-btn:focus-visible, .icon-btn:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.item-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 340px; overflow-y: auto; }
+.item-list li { display: flex; align-items: center; gap: 8px; }
+.swatch { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.icon-btn {
+  flex: none; width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer;
+}
+.icon-btn:hover { color: var(--danger); border-color: var(--danger); }
+.empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+details { border-top: 1px solid var(--line); padding-top: 12px; }
+summary { cursor: pointer; font-weight: 600; }
+details[open] summary { margin-bottom: 10px; }
+textarea.field { width: 100%; min-height: 110px; resize: vertical; }
+.bulk-actions { margin-top: 8px; display: flex; justify-content: flex-end; }
+.danger-zone { display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 12px; }
+.confirm-bar { display: grid; gap: 8px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.confirm-bar p { margin: 0; }
+.confirm-actions { display: flex; gap: 8px; }
+.storage-note { font-size: 12px; color: var(--muted); margin: 0; }
+
+/* Shark-cat popups */
+.ocean-card {
+  position: relative; overflow: hidden; color: var(--ocean-ink);
+  background: radial-gradient(120% 90% at 85% 100%, var(--ocean-2), var(--ocean-1) 70%);
+  border: 1px solid color-mix(in srgb, var(--ocean-2) 70%, var(--ink) 10%);
+}
+.ocean-card .bubbles { position: absolute; inset: 0; pointer-events: none; }
+.ocean-card .bubbles i {
+  position: absolute; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--ocean-ink) 25%, transparent);
+}
+.toast {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: flex; justify-content: center; pointer-events: none;
+}
+.toast-card {
+  width: min(100%, 440px); border-radius: 20px; padding: 14px 16px 14px 112px; min-height: 92px;
+  display: flex; align-items: center; box-shadow: 0 12px 30px rgba(10, 30, 50, .25);
+  animation: rise .35s cubic-bezier(.2,.9,.3,1.2);
+}
+.toast-card svg { position: absolute; left: -6px; bottom: -14px; width: 116px; height: auto; animation: bob 1.2s ease-in-out infinite; }
+.toast-card p { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 21px; line-height: 1.2; position: relative; }
+
+.modal { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background: rgba(8, 20, 32, .55); }
+.modal-card {
+  width: min(100%, 380px); border-radius: 26px; padding: 22px 20px 20px; display: grid; gap: 14px; text-align: center;
+  box-shadow: 0 24px 60px rgba(0,0,0,.35); animation: pop .4s cubic-bezier(.2,.9,.3,1.25);
+}
+.modal-card svg { width: min(220px, 70%); height: auto; justify-self: center; position: relative; }
+.modal-card .msg { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 20px; line-height: 1.25; position: relative; text-wrap: balance; }
+.winner-box { position: relative; background: var(--surface); color: var(--ink); border-radius: 16px; padding: 12px 14px; }
+.winner-label { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.winner-name { font-family: var(--font-display); font-weight: 800; font-size: clamp(26px, 8vw, 34px); line-height: 1.1; color: var(--accent); overflow-wrap: anywhere; }
+.modal-actions { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.modal-actions .btn { padding: 12px; }
+.modal-actions .btn-accent { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.link-btn { position: relative; background: none; border: 0; color: var(--ocean-ink); font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; justify-self: center; opacity: .85; }
+
+@keyframes rise { from { transform: translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes bob { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .toast-card, .modal-card, .toast-card svg { animation: none; }
+}
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+</head>
+<body>
+<!-- Original illustration: a cat wearing a plush shark costume -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="shark-cat" viewBox="0 0 230 200">
+      <path d="M182 118 C200 104 212 86 216 66 C222 92 220 112 212 124 C222 136 226 156 224 176 C214 156 200 144 182 140 Z" fill="#5F89B2"/>
+      <ellipse cx="108" cy="122" rx="92" ry="70" fill="#7EA7CF"/>
+      <path d="M96 56 C104 30 120 10 146 4 C134 24 132 42 136 60 Z" fill="#5F89B2"/>
+      <ellipse cx="104" cy="160" rx="66" ry="32" fill="#EEF4FA"/>
+      <path d="M34 150 C14 156 4 170 2 188 C20 186 36 176 48 164 Z" fill="#5F89B2"/>
+      <path d="M176 160 C196 164 210 176 214 192 C196 192 180 184 168 172 Z" fill="#5F89B2"/>
+      <circle cx="44" cy="96" r="5" fill="#1C2B36"/>
+      <circle cx="172" cy="96" r="5" fill="#1C2B36"/>
+      <circle cx="46" cy="94" r="1.6" fill="#FFFFFF"/>
+      <circle cx="174" cy="94" r="1.6" fill="#FFFFFF"/>
+      <circle cx="108" cy="118" r="54" fill="#E58C86"/>
+      <circle cx="108" cy="122" r="44" fill="#F6CF97"/>
+      <path d="M96 82 q4 10 0 18 M108 79 q4 11 0 20 M120 82 q4 10 0 18" stroke="#E3A55B" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <ellipse cx="90" cy="120" rx="6" ry="7.5" fill="#1C2B36"/>
+      <ellipse cx="126" cy="120" rx="6" ry="7.5" fill="#1C2B36"/>
+      <circle cx="92" cy="117" r="2.2" fill="#FFFFFF"/>
+      <circle cx="128" cy="117" r="2.2" fill="#FFFFFF"/>
+      <ellipse cx="80" cy="134" rx="7" ry="4" fill="#F29A8E" opacity=".7"/>
+      <ellipse cx="136" cy="134" rx="7" ry="4" fill="#F29A8E" opacity=".7"/>
+      <path d="M104 130 h8 l-4 5 z" fill="#E0727A"/>
+      <path d="M100 139 q4 5 8 0 q4 5 8 0" stroke="#1C2B36" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M70 130 l-16 -3 M70 136 l-16 2 M146 130 l16 -3 M146 136 l16 2" stroke="#B98A5A" stroke-width="1.6" stroke-linecap="round"/>
+      <g id="shark-teeth" fill="#FFFFFF"></g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="page">
+  <header class="masthead">
+    <div>
+      <h1>Sa Sa <span>ăn gì</span> hôm nay?</h1>
+      <p>Chạm vào vòng quay để chọn món.</p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <section class="stage" aria-label="Vòng quay">
+      <div class="wheel-wrap">
+        <canvas id="wheel" role="img" aria-label="Vòng quay chọn món"></canvas>
+        <div class="pointer" aria-hidden="true"></div>
+      </div>
+      <button id="spin-btn" class="spin-btn" type="button">Quay!</button>
+      <p id="stage-note" class="stage-note"></p>
+    </section>
+
+    <section class="editor" aria-labelledby="editor-title">
+      <div class="editor-head">
+        <h2 id="editor-title">Danh sách món</h2>
+        <span id="item-count" class="count"></span>
+      </div>
+      <fieldset id="editor-fields">
+        <legend class="sr-only">Sửa danh sách món</legend>
+        <form id="add-form" class="add-row" autocomplete="off">
+          <label for="new-item" class="sr-only">Tên món mới</label>
+          <input id="new-item" class="field" maxlength="40" placeholder="Thêm món, ví dụ: Cơm sườn non">
+          <button class="btn btn-primary" type="submit">Thêm</button>
+        </form>
+        <ul id="item-list" class="item-list"></ul>
+        <details>
+          <summary>Dán nhiều món một lúc</summary>
+          <label for="bulk-input" class="sr-only">Mỗi dòng một món</label>
+          <textarea id="bulk-input" class="field" placeholder="Mỗi dòng một món&#10;Cơm gà Hải Nam&#10;Hủ tiếu Nam Vang"></textarea>
+          <div class="bulk-actions"><button id="bulk-add" class="btn" type="button">Thêm các món này</button></div>
+        </details>
+        <div class="danger-zone">
+          <button id="reset-btn" class="btn" type="button">Khôi phục danh sách mẫu</button>
+          <button id="clear-btn" class="btn btn-danger" type="button">Xoá hết</button>
+        </div>
+        <div id="confirm-bar" class="confirm-bar" hidden>
+          <p id="confirm-text"></p>
+          <div class="confirm-actions">
+            <button id="confirm-yes" class="btn btn-danger" type="button">Đồng ý</button>
+            <button id="confirm-no" class="btn" type="button">Huỷ</button>
+          </div>
+        </div>
+      </fieldset>
+      <p class="storage-note">Danh sách được lưu trên trình duyệt của điện thoại này.</p>
+    </section>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden aria-live="polite">
+  <div class="toast-card ocean-card">
+    <div class="bubbles" aria-hidden="true"><i style="width:14px;height:14px;right:18px;top:12px"></i><i style="width:8px;height:8px;right:42px;top:30px"></i></div>
+    <svg viewBox="0 0 230 200" aria-hidden="true"><use href="#shark-cat"/></svg>
+    <p>Sa Sa đợi một chút nhé :)</p>
+  </div>
+</div>
+
+<div id="result-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="result-msg">
+  <div class="modal-card ocean-card">
+    <div class="bubbles" aria-hidden="true">
+      <i style="width:18px;height:18px;left:22px;top:24px"></i><i style="width:10px;height:10px;left:46px;top:52px"></i>
+      <i style="width:14px;height:14px;right:28px;top:40px"></i><i style="width:7px;height:7px;right:54px;top:18px"></i>
+    </div>
+    <svg viewBox="0 0 230 200" aria-hidden="true"><use href="#shark-cat"/></svg>
+    <p id="result-msg" class="msg">Sa Sa ăn món này nhé, nếu không chịu thì quay tiếp nha em!</p>
+    <div class="winner-box">
+      <div class="winner-label">Món hôm nay</div>
+      <div id="winner-name" class="winner-name"></div>
+    </div>
+    <div class="modal-actions">
+      <button id="close-btn" class="btn" type="button">Chốt món này</button>
+      <button id="again-btn" class="btn btn-accent" type="button">Quay tiếp</button>
+    </div>
+    <button id="remove-winner-btn" class="link-btn" type="button">Bỏ món này khỏi vòng rồi quay tiếp</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const STORAGE_KEY = 'sasa-wheel:items:v1';
+  const SAMPLE_ITEMS = [
+    'Cơm tấm sườn bì chả', 'Cơm tấm Long Xuyên', 'Cơm gà xối mỡ', 'Cơm phần văn phòng',
+    'Cơm chiên Dương Châu', 'Mì xào bò', 'Hủ tiếu xào', 'Phở bò', 'Bò kho bánh mì', 'Cơm gà luộc'
+  ];
+  const TAU = Math.PI * 2;
+  const MAX_LEN = 40;
+
+  // ---- DOM ----
+  const $ = (id) => document.getElementById(id);
+  const canvas = $('wheel'), ctx = canvas.getContext('2d');
+  const spinBtn = $('spin-btn'), stageNote = $('stage-note');
+  const listEl = $('item-list'), countEl = $('item-count'), editorFields = $('editor-fields');
+  const toast = $('toast'), modal = $('result-modal'), winnerNameEl = $('winner-name');
+  const confirmBar = $('confirm-bar'), confirmText = $('confirm-text');
+
+  // ---- State ----
+  const state = { items: loadItems(), rotation: 0, spinning: false, winnerIndex: -1, pendingConfirm: null };
+
+  function loadItems() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        // Validate kỹ vì localStorage có thể bị sửa tay / hỏng
+        if (Array.isArray(parsed) && parsed.every((s) => typeof s === 'string')) return parsed.slice(0, 100);
+      }
+    } catch (e) { /* storage bị chặn: dùng danh sách mẫu */ }
+    return SAMPLE_ITEMS.slice();
+  }
+  function saveItems() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items)); } catch (e) { /* ignore */ }
+  }
+  const normalize = (s) => s.replace(/\s+/g, ' ').trim().slice(0, MAX_LEN);
+
+  // ---- Shark teeth (generated once into the SVG symbol) ----
+  (function buildTeeth() {
+    const g = document.getElementById('shark-teeth');
+    const cx = 108, cy = 118, outer = 54, inner = 45, count = 16, half = 0.12;
+    let html = '';
+    for (let k = 0; k < count; k++) {
+      const a = (k / count) * TAU;
+      const p1 = [cx + outer * Math.cos(a - half), cy + outer * Math.sin(a - half)];
+      const p2 = [cx + outer * Math.cos(a + half), cy + outer * Math.sin(a + half)];
+      const tip = [cx + inner * Math.cos(a), cy + inner * Math.sin(a)];
+      html += `<polygon points="${p1.join(',')} ${p2.join(',')} ${tip.join(',')}"/>`;
+    }
+    g.innerHTML = html;
+  })();
+
+  // ---- Theme colors from CSS tokens ----
+  let colors = {};
+  function readColors() {
+    const cs = getComputedStyle(document.documentElement);
+    const v = (n) => cs.getPropertyValue(n).trim();
+    colors = {
+      segs: [v('--seg1'), v('--seg2'), v('--seg3'), v('--seg4'), v('--seg5'), v('--seg6')],
+      segInk: v('--seg-ink'), rim: v('--rim'), hub: v('--hub'), ink: v('--ink'),
+      muted: v('--muted'), line: v('--line'), accent: v('--accent'), surface: v('--surface')
+    };
+  }
+  function segColor(i, n) {
+    // Tránh 2 ô cạnh nhau (ô cuối và ô đầu) trùng màu
+    if (n > 1 && i === n - 1 && (n - 1) % 6 === 0) return colors.segs[2];
+    return colors.segs[i % 6];
+  }
+
+  // ---- Canvas sizing ----
+  let cssSize = 0;
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    cssSize = rect.width;
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.width * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drawWheel();
+  }
+
+  function fitText(text, maxWidth) {
+    if (ctx.measureText(text).width <= maxWidth) return text;
+    let t = text;
+    while (t.length > 1 && ctx.measureText(t + '…').width > maxWidth) t = t.slice(0, -1);
+    return t + '…';
+  }
+
+  function drawWheel() {
+    const size = cssSize;
+    if (!size) return;
+    const c = size / 2, rimW = Math.max(8, size * 0.03), R = c - rimW - 2;
+    const n = state.items.length;
+    ctx.clearRect(0, 0, size, size);
+
+    // Rim
+    ctx.beginPath(); ctx.arc(c, c, c - 2, 0, TAU); ctx.fillStyle = colors.rim; ctx.fill();
+
+    if (n === 0) {
+      ctx.beginPath(); ctx.arc(c, c, R, 0, TAU); ctx.fillStyle = colors.surface; ctx.fill();
+      ctx.fillStyle = colors.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = `600 ${Math.round(size * 0.045)}px "Be Vietnam Pro", system-ui, sans-serif`;
+      ctx.fillText('Thêm món để bắt đầu', c, c);
+      return;
+    }
+
+    const a = TAU / n;
+    const fontPx = Math.max(11, Math.min(size * 0.05, (size * 0.9) / Math.max(n, 6) + 4));
+    for (let i = 0; i < n; i++) {
+      const start = -Math.PI / 2 + state.rotation + i * a;
+      ctx.beginPath(); ctx.moveTo(c, c); ctx.arc(c, c, R, start, start + a); ctx.closePath();
+      ctx.fillStyle = segColor(i, n); ctx.fill();
+      if (n > 1) { ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 1.5; ctx.stroke(); }
+
+      // Label đọc từ ngoài vào trong theo bán kính
+      ctx.save();
+      ctx.translate(c, c); ctx.rotate(start + a / 2);
+      ctx.fillStyle = colors.segInk; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.font = `600 ${fontPx}px "Be Vietnam Pro", system-ui, sans-serif`;
+      ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 3;
+      ctx.fillText(fitText(state.items[i], R * 0.68), R - 12, 0);
+      ctx.restore();
+    }
+
+    // Rim studs
+    const studs = Math.max(12, n * 2);
+    for (let k = 0; k < studs; k++) {
+      const ang = (k / studs) * TAU + state.rotation;
+      ctx.beginPath(); ctx.arc(c + (c - rimW / 2 - 2) * Math.cos(ang), c + (c - rimW / 2 - 2) * Math.sin(ang), rimW * 0.22, 0, TAU);
+      ctx.fillStyle = 'rgba(255,255,255,.8)'; ctx.fill();
+    }
+
+    // Hub
+    const hubR = size * 0.11;
+    ctx.beginPath(); ctx.arc(c, c, hubR, 0, TAU); ctx.fillStyle = colors.hub; ctx.fill();
+    ctx.lineWidth = 3; ctx.strokeStyle = colors.rim; ctx.stroke();
+    ctx.fillStyle = colors.accent; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = `800 ${Math.round(hubR * 0.55)}px "Baloo 2", system-ui, sans-serif`;
+    ctx.fillText('QUAY', c, c + 1);
+  }
+
+  // ---- Spin ----
+  const mod = (x, m) => ((x % m) + m) % m;
+  function randomFloat() {
+    // crypto cho random đều hơn Math.random, fallback nếu không có
+    try { const b = new Uint32Array(1); crypto.getRandomValues(b); return b[0] / 4294967296; } catch (e) { return Math.random(); }
+  }
+  const randomInt = (n) => Math.floor(randomFloat() * n);
+  function indexAt(rotation, n) { return Math.floor(mod(-rotation, TAU) / (TAU / n)) % n; }
+
+  let audioCtx = null, soundOk = true;
+  function ensureAudio() {
+    if (audioCtx || !soundOk) return;
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { soundOk = false; }
+  }
+  function tick() {
+    if (!audioCtx) return;
+    try {
+      const t = audioCtx.currentTime, osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+      osc.type = 'triangle'; osc.frequency.value = 1100;
+      gain.gain.setValueAtTime(0.06, t); gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
+      osc.connect(gain).connect(audioCtx.destination); osc.start(t); osc.stop(t + 0.05);
+    } catch (e) { /* ignore */ }
+  }
+
+  function spin() {
+    const n = state.items.length;
+    if (state.spinning || n < 2) return;
+    closeModal(false);
+    ensureAudio();
+    state.spinning = true;
+    setBusy(true);
+    toast.hidden = false;
+
+    const a = TAU / n;
+    const target = randomInt(n);
+    // Dừng trong khoảng 15%–85% của ô để kim không nằm sát vạch chia
+    const offset = (0.15 + randomFloat() * 0.7) * a;
+    const desired = mod(-(target * a + offset), TAU);
+    const delta = mod(desired - mod(state.rotation, TAU), TAU);
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const turns = reduced ? 1 : 5 + randomInt(3);
+    const startRot = state.rotation, total = turns * TAU + delta;
+    const duration = reduced ? 1200 : 4300 + randomFloat() * 900;
+    const t0 = performance.now();
+    let lastIdx = indexAt(startRot, n);
+
+    function frame(now) {
+      const p = Math.min(1, (now - t0) / duration);
+      const eased = 1 - Math.pow(1 - p, 4); // ease-out quart
+      state.rotation = startRot + total * eased;
+      const idx = indexAt(state.rotation, n);
+      if (idx !== lastIdx) { tick(); lastIdx = idx; }
+      drawWheel();
+      if (p < 1) requestAnimationFrame(frame);
+      else finishSpin(target);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function finishSpin(target) {
+    state.rotation = mod(state.rotation, TAU);
+    state.spinning = false;
+    state.winnerIndex = target;
+    toast.hidden = true;
+    setBusy(false);
+    winnerNameEl.textContent = state.items[target];
+    modal.hidden = false;
+    $('again-btn').focus();
+  }
+
+  function closeModal(focusSpin = true) {
+    if (modal.hidden) return;
+    modal.hidden = true;
+    if (focusSpin) spinBtn.focus();
+  }
+
+  function setBusy(busy) {
+    editorFields.disabled = busy;
+    updateSpinAvailability();
+  }
+
+  function updateSpinAvailability() {
+    const n = state.items.length;
+    spinBtn.disabled = state.spinning || n < 2;
+    stageNote.textContent = n < 2 ? 'Cần ít nhất 2 món để quay.' : '';
+  }
+
+  // ---- Editor ----
+  function renderList() {
+    listEl.innerHTML = '';
+    if (state.items.length === 0) {
+      const li = document.createElement('li');
+      li.className = 'empty'; li.textContent = 'Chưa có món nào. Thêm món ở ô phía trên.';
+      listEl.appendChild(li);
+    }
+    state.items.forEach((name, i) => {
+      const li = document.createElement('li');
+      const sw = document.createElement('span');
+      sw.className = 'swatch'; sw.style.background = segColor(i, state.items.length);
+      const input = document.createElement('input');
+      input.className = 'field'; input.id = `item-${i}`; input.value = name; input.maxLength = MAX_LEN;
+      input.setAttribute('aria-label', `Tên món ${i + 1}`);
+      input.addEventListener('input', () => {
+        state.items[i] = input.value.slice(0, MAX_LEN);
+        drawWheel();
+      });
+      input.addEventListener('change', () => {
+        const v = normalize(input.value);
+        if (!v) { removeItem(i); return; } // để trống = xoá món
+        state.items[i] = v; input.value = v; saveItems(); drawWheel();
+      });
+      const del = document.createElement('button');
+      del.type = 'button'; del.className = 'icon-btn'; del.textContent = '×';
+      del.setAttribute('aria-label', `Xoá ${name}`);
+      del.addEventListener('click', () => removeItem(i));
+      li.append(sw, input, del);
+      listEl.appendChild(li);
+    });
+    countEl.textContent = `${state.items.length} món`;
+    updateSpinAvailability();
+  }
+
+  function commit() { saveItems(); renderList(); drawWheel(); }
+  function addItems(names) {
+    const clean = names.map(normalize).filter(Boolean);
+    if (!clean.length) return 0;
+    state.items.push(...clean);
+    state.items = state.items.slice(0, 100);
+    commit();
+    return clean.length;
+  }
+  function removeItem(i) { state.items.splice(i, 1); commit(); }
+
+  $('add-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = $('new-item');
+    if (addItems([input.value])) {
+      input.value = '';
+      listEl.scrollTop = listEl.scrollHeight;
+    }
+    input.focus();
+  });
+  $('bulk-add').addEventListener('click', () => {
+    const ta = $('bulk-input');
+    if (addItems(ta.value.split('\n'))) ta.value = '';
+  });
+
+  // Xác nhận ngay trong trang (confirm() bị chặn trong artifact)
+  function askConfirm(text, action) {
+    state.pendingConfirm = action; confirmText.textContent = text; confirmBar.hidden = false;
+    $('confirm-no').focus();
+  }
+  $('reset-btn').addEventListener('click', () => askConfirm('Thay danh sách hiện tại bằng danh sách mẫu?', () => { state.items = SAMPLE_ITEMS.slice(); commit(); }));
+  $('clear-btn').addEventListener('click', () => askConfirm('Xoá tất cả món trong danh sách?', () => { state.items = []; commit(); }));
+  $('confirm-yes').addEventListener('click', () => { const act = state.pendingConfirm; state.pendingConfirm = null; confirmBar.hidden = true; if (act) act(); });
+  $('confirm-no').addEventListener('click', () => { state.pendingConfirm = null; confirmBar.hidden = true; });
+
+  // ---- Spin triggers & modal ----
+  spinBtn.addEventListener('click', spin);
+  canvas.addEventListener('click', spin);
+  $('again-btn').addEventListener('click', spin);
+  $('close-btn').addEventListener('click', () => closeModal());
+  $('remove-winner-btn').addEventListener('click', () => {
+    if (state.winnerIndex >= 0 && state.winnerIndex < state.items.length) {
+      state.items.splice(state.winnerIndex, 1);
+      state.winnerIndex = -1;
+      commit();
+    }
+    closeModal(false);
+    if (state.items.length >= 2) spin(); else spinBtn.focus();
+  });
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  // ---- Theme changes: đọc lại màu và vẽ lại ----
+  function refreshTheme() { readColors(); renderList(); drawWheel(); }
+  try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refreshTheme); } catch (e) { /* old Safari */ }
+  new MutationObserver(refreshTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---- Init ----
+  readColors();
+  renderList();
+  if ('ResizeObserver' in window) new ResizeObserver(resizeCanvas).observe(canvas);
+  else window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+  // Vẽ lại khi font đã tải xong để label dùng đúng font
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawWheel);
+})();
+</script>
+</body>
+</html>
